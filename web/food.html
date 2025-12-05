@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中秋美食 · 月圆食美</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "微软雅黑", "宋体", serif;
+            background-image: url("images/food-bg.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color: rgba(255, 255, 255, 0.8);
+            background-blend-mode: overlay;
+            color: #333;
+            line-height: 1.8;
+        }
+        /* 导航栏 */
+        .nav {
+            background-color: rgba(210, 105, 30, 0.95);
+            padding: 18px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 25px;
+            font-size: 19px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .nav a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: #ffd700;
+            transition: width 0.3s ease;
+        }
+        .nav a:hover {
+            color: #ffd700;
+            background-color: rgba(255,255,255,0.15);
+        }
+        .nav a:hover::after { width: 80%; }
+        /* 头部横幅 */
+        .header-banner {
+            max-width: 1200px;
+            margin: 30px auto;
+            text-align: center;
+            padding: 20px;
+        }
+        .title {
+            font-size: 42px;
+            color: #b8860b;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+            letter-spacing: 3px;
+        }
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+        /* 分类标签 */
+        .cate-nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        .cate-btn {
+            padding: 8px 22px;
+            background-color: rgba(253, 245, 230, 0.9);
+            border: 2px solid #d2691e;
+            border-radius: 25px;
+            font-size: 16px;
+            color: #d2691e;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .cate-btn.active {
+            background-color: #d2691e;
+            color: white;
+        }
+        .cate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        }
+        /* 美食内容区 */
+        .food-content {
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+            display: none;
+        }
+        .food-content.active {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 30px;
+            animation: fadeIn 0.8s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* 美食卡片 */
+        .food-card {
+            background-color: rgba(253, 245, 230, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+               .food-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+        }
+        /* 跳转提示（仅月饼卡片显示） */
+        .jump-tip {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 10px;
+            background-color: #ffd700;
+            color: #8b4513;
+            font-size: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .food-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-bottom: 3px solid #d2691e;
+        }
+        .food-info {
+            padding: 20px;
+        }
+        .food-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background-color: #ffd700;
+            color: #8b4513;
+            font-size: 12px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        .food-title {
+            font-size: 22px;
+            color: #b8860b;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .food-desc {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .story-btn {
+            padding: 6px 16px;
+            background-color: #d2691e;
+            color: white;
+            border: none;
+            border-radius: 18px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .story-btn:hover {
+            background-color: #b8860b;
+        }
+        /* 弹窗遮罩 */
+        .modal-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-mask.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        /* 弹窗内容 */
+        .modal-content {
+            width: 90%;
+            max-width: 500px;
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 22px;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .close-btn:hover {
+            color: #d2691e;
+        }
+        .modal-title {
+            font-size: 20px;
+            color: #b8860b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .modal-text {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.8;
+        }
+        /* 页脚 */
+        .footer {
+            background-color: rgba(210, 105, 30, 0.95);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 16px;
+        }
+        .footer p { margin: 5px 0; }
+    </style>
+</head>
+<body>
+       <!-- 导航栏 -->
+    <div class="nav">
+        <a href="../index.html">主页</a>
+        <a href="history.html">中秋历史</a>
+        <a href="custom.html">中秋习俗</a>
+        <a href="poem.html">中秋诗词</a>
+        <a href="food.html">中秋美食</a>
+    </div>
+
+    <!-- 头部横幅 -->
+    <div class="header-banner">
+        <h1 class="title">中秋美食 · 月圆食美</h1>
+        <p class="subtitle">尝遍南北风味，品尽中秋滋味</p>
+    </div>
+
+    <!-- 分类标签 -->
+    <div class="cate-nav">
+        <button class="cate-btn active" data-cate="mooncake">经典月饼</button>
+        <button class="cate-btn" data-cate="local">地域特色</button>
+        <button class="cate-btn" data-cate="seasonal">应季食材</button>
+        <button class="cate-btn" data-cate="drink">中秋饮品</button>
+    </div>
+
+    <!-- 经典月饼分类内容 -->
+    <div class="food-content active" id="mooncake">
+        <!-- 广式月饼（带跳转提示） -->
+        <div class="food-card">
+        <img src="../image/gyb.png"  class="food-img">
+            <div class="food-info">
+                <span class="food-tag">广东</span>
+                <h3 class="food-title">广式月饼</h3>
+                <p class="food-desc">皮薄馅足，口感软糯，甜度适中，经典口味有莲蓉蛋黄、五仁、豆沙等，是流传最广的月饼品类。</p>
+                <button class="story-btn" data-story="guangshi">查看美食故事</button>
+            </div>
+        </div>
+        <!-- 苏式月饼（带跳转提示） -->
+        <div class="food-card">
+        <img src="../image/syb.png"  class="food-img">
+            <div class="food-info">
+                <span class="food-tag">江苏</span>
+                <h3 class="food-title">苏式月饼</h3>
+                <p class="food-desc">层层酥皮，入口即化，馅料以甜为主，也有咸鲜口味，代表有鲜肉月饼、玫瑰豆沙月饼。</p>
+                <button class="story-btn" data-story="sushi">查看美食故事</button>
+            </div>
+        </div>
+        <!-- 滇式月饼（带跳转提示） -->
+        <div class="food-card">
+        <img src="../image/dyb.png"  class="food-img">
+            <div class="food-info">
+                <span class="food-tag">云南</span>
+                <h3 class="food-title">滇式月饼</h3>
+                <p class="food-desc">以云腿月饼为代表，咸甜交织，火腿的鲜香与糖的甜润融合，口感独特。</p>
+                <button class="story-btn" data-story="dianshi">查看美食故事</button>
+            </div>
+        </div>
+        
+    </div>
+       <!-- 地域特色分类内容 -->
+    <div class="food-content" id="local">
+        <!-- 湖南酥薄月 -->
+        <div class="food-card">
+        <img src="../image/sby.png"  class="food-img">
+            <div class="food-info">
+                <span class="food-tag">湖南</span>
+                <h3 class="food-title">茶油酥薄月</h3>
+                <p class="food-desc">用茶油制皮，酥松掉渣，内馅多为芝麻、桂花糖，甜而不腻，是湖南中秋特色点心。</p>
+                <button class="story-btn" data-story="suboyue">查看美食故事</button>
+            </div>
+        </div>
+        <!-- 陕西团圆馍 -->
+        <div class="food-card">
+            <div class="food-info">
+            <img src="../image/tym.png"  class="food-img">
+                <span class="food-tag">陕西</span>
+                <h3 class="food-title">团圆馍</h3>
+                <p class="food-desc">带馅麦饼，分而食之象征团圆，馅料多为核桃、芝麻、红糖，口感扎实香甜。</p>
+                <button class="story-btn" data-story="tuanyuanmo">查看美食故事</button>
+            </div>
+        </div>
+        <!-- 江苏桂花鸭 -->
+        <div class="food-card">
+            <div class="food-info">
+            <img src="../image/ghy.png"  class="food-img">
+                <span class="food-tag">江苏</span>
+                <h3 class="food-title">桂花鸭</h3>
+                <p class="food-desc">桂子飘香时的鸭子最为肥嫩，盐水烹制后皮白肉嫩，是江苏中秋团圆饭的标配。</p>
+                <button class="story-btn" data-story="guihuaya">查看美食故事</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 应季食材分类内容 -->
+    <div class="food-content" id="seasonal">
+        <!-- 大闸蟹 -->
+        <div class="food-card">
+            <div class="food-info">
+            <img src="../image/dzx.png"  class="food-img">
+                <span class="food-tag">江南</span>
+                <h3 class="food-title">清蒸大闸蟹</h3>
+                <p class="food-desc">中秋时节蟹肥膏黄，清蒸能最大程度保留鲜味，蘸姜醋汁食用，解腻又提鲜。</p>
+                <button class="story-btn" data-story="xie">查看美食故事</button>
+            </div>
+        </div>
+        
+        <!-- 柚子 -->
+        <div class="food-card">
+            <div class="food-info">
+            <img src="../image/yz.png"  class="food-img">
+                <span class="food-tag">全国</span>
+                <h3 class="food-title">中秋柚子</h3>
+                <p class="food-desc">谐音“佑子”，象征保佑子孙平安，果肉分瓣寓意团圆，是中秋供月、馈赠的必备水果。</p>
+                <button class="story-btn" data-story="youzi">查看美食故事</button>
+            </div>
+        </div>
+        <!-- 桂花糕 -->
+        <div class="food-card">
+            <div class="food-info">
+            <img src="../image/ghg.png"  class="food-img">
+                <span class="food-tag">江南</span>
+                <h3 class="food-title">桂花糕</h3>
+                <p class="food-desc">中秋桂花开，用桂花制作的糕点清香软糯，甜而不腻，是应季的传统点心。</p>
+                <button class="story-btn" data-story="guihuagao">查看美食故事</button>
+            </div>
+        </div>
+    </div>
+       <!-- 中秋饮品分类内容 -->
+    <div class="food-content" id="drink">
+        <!-- 桂花酒 -->
+        <div class="food-card">
+            <div class="food-info">
+            <img src="../image/ghj.png"  class="food-img">
+                <span class="food-tag">全国</span>
+                <h3 class="food-title">桂花酒</h3>
+                <p class="food-desc">以桂花浸泡白酒制成，香气馥郁，口感醇和，中秋赏月时饮用，寓意“月下共饮，团圆美满”。</p>
+                <button class="story-btn" data-story="guihuajiu">查看美食故事</button>
+            </div>
+        </div>
+        <!-- 菊花茶 -->
+        <div class="food-card">
+            <div class="food-info">
+            <img src="../image/jhc.png"  class="food-img">
+                <span class="food-tag">全国</span>
+                <h3 class="food-title">菊花茶</h3>
+                <p class="food-desc">中秋时节干燥，菊花茶清热降火，搭配月饼食用可解腻，是传统的中秋饮品。</p>
+                <button class="story-btn" data-story="juhuacha">查看美食故事</button>
+            </div>
+        </div>
+        <!-- 酸梅汤 -->
+        <div class="food-card">
+            <div class="food-info">
+            <img src="../image/smt.png"  class="food-img">
+                <span class="food-tag">北方</span>
+                <h3 class="food-title">酸梅汤</h3>
+                <p class="food-desc">用乌梅、山楂、甘草熬制，酸甜开胃，解腻消食，是北方中秋搭配月饼的经典饮品。</p>
+                <button class="story-btn" data-story="suanmeitang">查看美食故事</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 美食故事弹窗 -->
+    <div class="modal-mask" id="storyModal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 class="modal-title">美食故事</h3>
+            <div class="modal-text" id="storyContent">
+                <!-- 故事内容将通过JS动态加载 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer">
+    
+        <p>月满中秋，味暖人心</p>
+    </div>
+
+    <script>
+        // 1. 分类切换逻辑
+        const cateBtns = document.querySelectorAll('.cate-btn');
+        const foodContents = document.querySelectorAll('.food-content');
+
+        function switchCate(targetCate) {
+            // 切换按钮状态
+            cateBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.cate === targetCate);
+            });
+            // 切换内容区域
+            foodContents.forEach(content => {
+                content.classList.toggle('active', content.id === targetCate);
+            });
+            // 滚动到内容区域顶部
+            document.querySelector(`#${targetCate}`).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+               // 标签点击切换
+        cateBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                switchCate(btn.dataset.cate);
+            });
+        });
+
+        // 2. 月饼卡片跳转食材分类
+        const jumpTips = document.querySelectorAll('.jump-tip');
+        jumpTips.forEach(tip => {
+            tip.addEventListener('click', () => {
+                const targetCate = tip.dataset.jump;
+                switchCate(targetCate);
+            });
+        });
+
+        // 3. 美食故事弹窗逻辑
+        const storyBtn = document.querySelectorAll('.story-btn');
+        const modal = document.getElementById('storyModal');
+        const closeBtn = document.querySelector('.close-btn');
+        const storyContent = document.getElementById('storyContent');
+
+        // 美食故事数据
+        const foodStories = {
+            guangshi: "广式月饼起源于唐代，最初是用来祭月的供品。明清时期，广式月饼制作技艺逐渐成熟，因其皮薄馅足、口感软糯的特点，成为南方月饼的代表。民国时期，广式月饼开始流传全国，莲蓉蛋黄口味更是成为经典中的经典。",
+            sushi: "苏式月饼历史悠久，源于南宋时期的“酥饼”。清代，苏式月饼形成了甜咸两大风味，其中鲜肉月饼因皮薄馅多、鲜香多汁，成为苏州人中秋必备的美食。苏式月饼的酥皮制作工艺复杂，需要反复折叠起酥，才能达到入口即化的效果。",
+            dianshi: "滇式月饼中的云腿月饼，起源于云南宣威。相传清代一位糕点师傅将当地特产的宣威火腿融入月饼馅料，创造出咸甜交织的独特口感。因其风味独特，很快在云南流传开来，成为中秋佳节的特色美食，如今已被列入非物质文化遗产名录。",
+            qiongsi: "琼式月饼又称“海南月饼”，源于明代，是海南本土的传统糕点。其制作工艺保留了古老的手工技艺，红沙月饼以红糖、芝麻、花生为馅，椰香浓郁，酥香掉渣。琼式月饼承载着海南人的中秋记忆，是团圆的象征。",
+            suboyue: "湖南茶油酥薄月起源于清代，因采用茶油制作外皮，口感酥薄而得名。中秋时节，湖南人家家户户都会制作或购买酥薄月，作为祭月、馈赠亲友的礼品。酥薄月的制作需要经过多道工序，茶油的清香与馅料的香甜完美融合，是湖南中秋的独特味道。",
+            tuanyuanmo: "陕西团圆馍是关中地区的中秋传统美食，象征着“团圆美满”。中秋之夜，全家人围坐在一起，分食一个大大的团圆馍，寓意着家庭和睦、永不分离。团圆馍的馅料丰富，核桃、芝麻、红糖等食材的搭配，不仅美味，还寄托了人们对美好生活的向往。",
+            tianluo: "广东中秋吃田螺的习俗源于宋代，相传中秋时节的田螺肉质肥美，且有“明目”的功效。粤语中“螺”与“罗”谐音，“吃田螺”寓意“罗织财富”。中秋之夜，广东人会将田螺用紫苏、辣椒爆炒，全家围坐赏月吃田螺，其乐融融。",
+            guihuaya: "江苏桂花鸭又称“盐水鸭”，中秋时节的鸭子因吃了桂花而变得肥嫩鲜美。南京人中秋团圆饭必有桂花鸭，其制作工艺讲究“清而不淡、鲜而不俗”，皮白肉嫩、肥而不腻。桂花鸭与中秋的桂花相互映衬，成为江南中秋的标志性美食。",
+            xie: "中秋吃大闸蟹的习俗源于江南地区，明代起就有“中秋品蟹”的记载。中秋时节，大闸蟹膏满黄肥，是一年中最美味的时刻。江南人吃蟹讲究“慢工出细活”，用蟹八件慢条斯理地品尝，搭配黄酒或姜醋汁，解腻又去腥，成为中秋赏月的绝佳搭配。",
+            yutou: "潮汕中秋食芋头的习俗源于民间传说，相传元末明初，潮汕人民为了反抗元朝统治者，在中秋之夜用芋头当作“人头”祭祀，寓意“剥鬼皮”。如今，这一习俗演变为中秋食芋头，象征着辟邪消灾、团圆美满。潮汕芋头多采用清蒸的方式，保留其原汁原味，口感粉糯香甜。",
+            youzi: "中秋吃柚子的习俗由来已久，柚子谐音“佑子”，寓意保佑子孙平安、健康成长。柚子外形圆润，象征团圆；果肉分瓣，寓意“多子多福”。中秋时节，柚子成熟，酸甜多汁，是供月、馈赠亲友的必备水果。此外，柚子皮还可以用来制作蜜饯、香囊等，物尽其用。",
+            guihuagao: "桂花糕是江南地区的传统糕点，中秋时节桂花盛开，正是制作桂花糕的最佳时机。桂花糕以糯米粉、桂花、白糖为原料，制作而成的糕点清香软糯、甜而不腻。江南人中秋赏月时，会配上一杯清茶和几块桂花糕，享受惬意的中秋之夜。",
+            guihuajiu: "桂花酒的历史可以追溯到战国时期，屈原在《九歌》中就有“援北斗兮酌桂浆”的诗句。中秋时节，桂花盛开，人们将桂花采摘下来，浸泡在白酒中，制成桂花酒。桂花酒香气馥郁、口感醇和，中秋之夜，家人团聚，赏月饮酒，寓意着“花好月圆人团圆”。",
+            juhuacha: "菊花茶是中秋传统饮品，中秋时节天气干燥，菊花茶具有清热降火、清肝明目的功效。搭配月饼食用，还能解腻消食。古人认为，中秋赏月时饮用菊花茶，能让人的心境如菊花般高洁，增添节日的雅致氛围。",
+            yezizhi: "海南鲜椰子汁是当地中秋的特色饮品，海南盛产椰子，中秋时节的椰子清甜多汁、营养丰富。海南人中秋赏月时，会将新鲜椰子现开现喝，清甜的椰子汁搭配香甜的琼式月饼，口感清爽，解腻又解渴，是海南中秋的独特体验。",
+            suanmeitang: "酸梅汤是北方中秋的经典饮品，用乌梅、山楂、甘草、陈皮等食材熬制而成，酸甜开胃、解腻消食。北方中秋天气转凉，喝一杯温热的酸梅汤，既能暖身，又能缓解月饼的甜腻。酸梅汤的制作工艺传承已久，是北方人中秋佳节的味觉记忆。"
+        };
+
+        // 打开弹窗
+        storyBtn.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const storyKey = btn.dataset.story;
+                storyContent.textContent = foodStories[storyKey];
+                modal.classList.add('show');
+            });
+        });
+
+        // 关闭弹窗
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('show');
+        });
+
+        // 点击遮罩关闭弹窗
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

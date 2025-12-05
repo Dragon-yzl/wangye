@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中秋习俗 · 千年传承的仪式感</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "微软雅黑", "楷体", serif;
+            background-image: url("images/bg.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-color: rgba(255, 255, 255, 0.75);
+            background-blend-mode: overlay;
+            color: #333;
+            line-height: 1.8;
+        }
+        /* 导航栏 */
+        .nav {
+            background-color: rgba(210, 105, 30, 0.95);
+            padding: 18px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 25px;
+            font-size: 19px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .nav a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: #ffd700;
+            transition: width 0.3s ease;
+        }
+        .nav a:hover {
+            color: #ffd700;
+            background-color: rgba(255,255,255,0.15);
+        }
+        .nav a:hover::after { width: 80%; }
+        /* 头部横幅 */
+        .header-banner {
+            max-width: 1200px;
+            margin: 30px auto;
+            text-align: center;
+            padding: 20px;
+        }
+        .title {
+            font-size: 42px;
+            color: #b8860b;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+            letter-spacing: 3px;
+        }
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+        /* 核心内容区 */
+        .content {
+            max-width: 1200px;
+            margin: 0 auto 50px;
+            padding: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        /* 通用卡片样式 */
+        .card {
+            background-color: rgba(253, 245, 230, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+            padding: 30px;
+            animation: fadeIn 1.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-title {
+            color: #d2691e;
+            font-size: 26px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid rgba(210, 105, 30, 0.2);
+            padding-bottom: 15px;
+        }
+        .card-icon {
+            font-size: 32px;
+        }
+        /* 主流习俗卡片（大卡片） */
+        .main-custom-card {
+            flex: 2;
+            min-width: 600px;
+        }
+        .custom-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+               .custom-item {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        @media (max-width: 768px) {
+            .custom-item { flex-direction: column; }
+            .main-custom-card { min-width: 100%; }
+        }
+        .custom-img {
+            width: 180px;
+            height: 140px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+        }
+        .custom-content {
+            flex: 1;
+        }
+        .custom-name {
+            font-size: 20px;
+            color: #b8860b;
+            margin-bottom: 10px;
+        }
+        .custom-desc {
+            color: #555;
+            margin-bottom: 10px;
+            font-size: 17px;
+        }
+        .custom-detail {
+            color: #777;
+            font-size: 16px;
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+        .custom-detail li {
+            margin-bottom: 5px;
+        }
+        /* 地域习俗卡片（小卡片） */
+        .region-custom-card {
+            flex: 1;
+            min-width: 350px;
+        }
+        .region-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .region-item {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .region-item:hover {
+            transform: translateY(-5px);
+            border-left: 4px solid #ffd700;
+        }
+        .region-name {
+            font-size: 18px;
+            color: #d2691e;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .region-custom {
+            color: #666;
+            font-size: 16px;
+        }
+        /* 习俗小知识卡片 */
+        .custom-knowledge-card {
+            flex: 100%;
+            margin-top: 20px;
+        }
+        .knowledge-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .knowledge-item {
+            width: 280px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .knowledge-item:hover {
+            transform: translateY(-5px);
+        }
+        .knowledge-icon {
+            font-size: 36px;
+            color: #b8860b;
+            margin-bottom: 15px;
+        }
+        .knowledge-title {
+            font-size: 18px;
+            color: #d2691e;
+            margin-bottom: 10px;
+        }
+        .knowledge-desc {
+            color: #666;
+            font-size: 15px;
+        }
+        /* 互动问答卡片 */
+        .custom-quiz-card {
+            flex: 100%;
+            margin-top: 20px;
+        }
+        .quiz-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .quiz-question {
+            font-size: 18px;
+            color: #b8860b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .quiz-question::before {
+            content: "❓";
+            font-size: 24px;
+        }
+                .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .quiz-option {
+            padding: 12px 15px;
+            background-color: rgba(253, 245, 230, 0.8);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .quiz-option:hover {
+            background-color: rgba(210, 105, 30, 0.1);
+            border-color: rgba(210, 105, 30, 0.3);
+        }
+        .quiz-option.correct {
+            background-color: rgba(144, 238, 144, 0.5);
+            border-color: #4CAF50;
+        }
+        .quiz-option.incorrect {
+            background-color: rgba(255, 182, 193, 0.5);
+            border-color: #f44336;
+        }
+        .quiz-answer {
+            font-size: 16px;
+            color: #555;
+            padding: 15px;
+            background-color: rgba(253, 245, 230, 0.5);
+            border-radius: 8px;
+            display: none;
+        }
+        .quiz-answer.show {
+            display: block;
+        }
+        /* 页脚 */
+        .footer {
+            background-color: rgba(210, 105, 30, 0.95);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+            font-size: 16px;
+        }
+        .footer p { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div class="nav">
+        <a href="../index.html">主页</a>
+        <a href="history.html">中秋历史</a>
+        <a href="custom.html">中秋习俗</a>
+        <a href="poem.html">中秋诗词</a>
+        <a href="food.html">中秋美食</a>
+    </div>
+
+    <!-- 头部横幅 -->
+    <div class="header-banner">
+        <h1 class="title">中秋习俗 · 烟火中的仪式感</h1>
+        <p class="subtitle">南北各异，古今相通，藏着中国人的团圆智慧</p>
+    </div>
+
+    <!-- 核心内容区 -->
+    <div class="content">
+        <!-- 主流习俗卡片 -->
+        <div class="card main-custom-card">
+            <h2 class="card-title">
+                <span class="card-icon">🏮</span>
+                全国通用主流习俗
+            </h2>
+            <div class="custom-list">
+                <!-- 赏月 -->
+                <div class="custom-item">
+                    <img src="../image/watchmoon.png" alt="中秋赏月" class="custom-img">
+
+                    <div class="custom-content">
+                        <h3 class="custom-name">赏月 · 天涯共此时</h3>
+                        <p class="custom-desc">中秋赏月是最核心的习俗之一，古人认为中秋月亮最圆最亮，象征着团圆美满，是人与自然的情感共鸣。</p>
+                        <ul class="custom-detail">
+                            <li>唐代起成为全民活动，文人墨客留下大量赏月诗词，如“但愿人长久，千里共婵娟”。</li>
+                            <li>传统赏月地点多选高处（如城楼、山顶、湖边），讲究“赏月、赏桂、赏秋香”三者结合。</li>
+                            <li>现代延伸：全家围坐阳台、公园野餐赏月，部分地区会举办“中秋赏月晚会”。</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- 吃月饼 -->
+                <div class="custom-item">
+                    <img src="../image/mooncake.png" alt="吃月饼" class="custom-img">                <div class="custom-content">
+                        <h3 class="custom-name">吃月饼 · 团圆的象征</h3>
+                        <p class="custom-desc">月饼以其圆形寓意“团圆”，是中秋不可或缺的食品，承载着家人团聚的美好愿望。</p>
+                        <ul class="custom-detail">
+                            <li>食用讲究“分食”，全家一人一块，象征“团圆不分家”，不能独食或浪费。</li>
+                            <li>传统月饼分广式、苏式、京式等，馅料有五仁、莲蓉、豆沙等，现代新增冰皮、流心等创新口味。</li>
+                            <li>民俗寓意：月饼最初为祭月供品，后演变为“团圆饼”，赠送月饼是中秋重要的社交礼仪。</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- 拜月 -->
+                <div class="custom-item">
+                    <img src="../image/worshipmoon.png" alt="拜月" class="custom-img">
+                    <div class="custom-content">
+                        <h3 class="custom-name">拜月 · 祈福纳祥</h3>
+                        <p class="custom-desc">拜月是中秋最具仪式感的习俗，源于上古时期的月神崇拜，核心是祈求平安、团圆、丰收。</p>
+                        <ul class="custom-detail">
+                            <li>仪式流程：傍晚在庭院设供桌，摆放月饼、柚子、石榴、桂花酒等，月亮升起时焚香祭拜，行三叩礼。</li>
+                            <li>性别讲究：传统“男不拜月，女不祭灶”，拜月多由女性主持，祈求容貌如月亮般皎洁，家庭和睦。</li>
+                            <li>现代简化：部分地区保留供月仪式，去掉繁琐礼节，成为家人团聚的象征性行为。</li>
+                        </ul>
+                    </div>
+                </div>
+                             <!-- 猜灯谜 -->
+                <div class="custom-item">
+                    <img src="../image/lantern.png" alt="猜灯谜" class="custom-img">
+                    <div class="custom-content">
+                        <h3 class="custom-name">猜灯谜 · 智慧的乐趣</h3>
+                        <p class="custom-desc">中秋猜灯谜始于宋代，将谜语写在灯笼上，供人猜射，兼具娱乐性和知识性，是节日的欢乐点缀。</p>
+                        <ul class="custom-detail">
+                            <li>灯谜特点：谜面简洁巧妙，谜底多为成语、典故、生活用品，讲究“回互其辞，使昏迷也”。</li>
+                            <li>活动场景：传统在灯笼夜市、寺庙广场举行，现代多见于家庭聚会、社区活动，猜对有小礼品。</li>
+                            <li>文化意义：既锻炼思维，又增进亲友互动，是中秋“雅俗共赏”的习俗代表。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 地域特色习俗卡片 -->
+        <div class="card region-custom-card">
+            <h2 class="card-title">
+                <span class="card-icon">🗺️</span>
+                地域特色习俗
+            </h2>
+            <div class="region-grid">
+                <div class="region-item">
+                    <div class="region-name">广东 · 拜月娘与耍禄仔</div>
+                    <div class="region-custom">潮汕地区女性会设“月娘案”，供奉菱角、芋头、月饼等；儿童提着灯笼游街“耍禄仔”，祈求学业进步。</div>
+                </div>
+                <div class="region-item">
+                    <div class="region-name">福建 · 博饼</div>
+                    <div class="region-custom">厦门、泉州等地流行“博饼”游戏，用骰子投掷瓷碗，根据点数获得不同奖品，源于郑成功时期的军中娱乐。</div>
+                </div>
+                <div class="region-item">
+                    <div class="region-name">江苏 · 走月亮</div>
+                    <div class="region-custom">中秋之夜，男女老少结伴出游，沿着河边、湖畔赏月散步，俗称“走月亮”，寓意“走通月路，万事如意”。</div>
+                </div>
+                <div class="region-item">
+                    <div class="region-name">湖南 · 放天灯</div>
+                    <div class="region-custom">湘西地区会制作纸糊天灯，点燃灯内蜡烛，让其升空，寓意“放飞心愿，祈福平安”，场面十分壮观。</div>
+                </div>
+                <div class="region-item">
+                    <div class="region-name">台湾 · 烤肉</div>
+                    <div class="region-custom">台湾中秋流行全家烤肉，形成“中秋烤肉=团圆”的独特文化，街头巷尾弥漫烤肉香气，成为标志性习俗。</div>
+                </div>
+                <div class="region-item">
+                    <div class="region-name">云南 · 跳月</div>
+                    <div class="region-custom">彝族、白族等少数民族会在中秋之夜聚集在月光下，跳“阿细跳月”等传统舞蹈，对歌传情，庆祝丰收。</div>
+                </div>
+                               <div class="region-item">
+                    <div class="region-name">广西 · 抛绣球</div>
+                    <div class="region-custom">壮族同胞中秋夜在月光下抛绣球、对山歌，未婚男女通过绣球传递情意，绣球上的刺绣图案寓意“吉祥如意”。</div>
+                </div>
+                               <div class="region-item">
+                    <div class="region-name">山西 · 献月与守夜</div>
+                    <div class="region-custom">晋北地区会在庭院设供桌“献月”，供品必含苹果（寓意平安）、梨（寓意顺利）；部分家庭会守夜至午夜，祈求团圆长久。</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 习俗小知识卡片 -->
+        <div class="card custom-knowledge-card">
+            <h2 class="card-title">
+                <span class="card-icon">📚</span>
+                习俗背后的小知识
+            </h2>
+            <div class="knowledge-grid">
+                <div class="knowledge-item">
+                    <div class="knowledge-icon">🥮</div>
+                    <div class="knowledge-title">月饼为何是圆形？</div>
+                    <div class="knowledge-desc">既对应中秋圆月，又象征“团圆”，同时古代祭祀讲究“以圆象天”，月饼作为供品自然取圆形。</div>
+                </div>
+                <div class="knowledge-item">
+                    <div class="knowledge-icon">🍊</div>
+                    <div class="knowledge-title">供月为何用柚子？</div>
+                    <div class="knowledge-desc">柚子谐音“佑子”，寓意保佑子孙平安；且柚子外形圆润，果肉分瓣，象征“多子多福，家庭和睦”。</div>
+                </div>
+                <div class="knowledge-item">
+                    <div class="knowledge-icon">🌼</div>
+                    <div class="knowledge-title">桂花与中秋的关联</div>
+                    <div class="knowledge-desc">桂花秋季盛开，香气浓郁，与中秋时间重合；桂花酒、桂花糕是中秋特色食品，象征“高洁、团圆”。</div>
+                </div>
+            </div>
+        </div>
+               <!-- 互动问答卡片 -->
+        <div class="card custom-quiz-card">
+            <h2 class="card-title">
+                <span class="card-icon">❓</span>
+                习俗小问答
+            </h2>
+            <div class="quiz-container">
+                <div class="quiz-question">传统中秋“男不拜月，女不祭灶”的原因是什么？</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="false">A. 古代男女地位不平等，禁止跨性别祭祀</div>
+                    <div class="quiz-option" data-correct="true">B. 月神为女性化身，男性拜月有失阳刚；灶神为男性，女性祭灶不合礼法</div>
+                    <div class="quiz-option" data-correct="false">C. 祭祀流程复杂，男性负责劳作，女性负责祭祀</div>
+                </div>
+                <div class="quiz-answer">
+                    正确答案：B。传统观念中，月神是嫦娥等女性形象，男性拜月被认为“阴柔”；灶神是张单等男性形象，女性祭灶被认为“越界”，本质是古代性别角色的文化分工，现代已逐渐淡化这一禁忌。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer">
+        <p>愿每一个漂泊的人，都能与思念的人共赏一轮明月</p>
+    </div>
+
+    <!-- 交互脚本 -->
+    <script>
+        // 平滑滚动效果
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 图片加载动画
+        const images = document.querySelectorAll('.custom-img');
+        images.forEach(img => {
+            img.style.opacity = '0';
+            img.style.transition = 'opacity 1s ease';
+            img.onload = function() {
+                img.style.opacity = '1';
+            }
+        });
+
+        // 习俗问答互动
+        const quizOptions = document.querySelectorAll('.quiz-option');
+        const quizAnswer = document.querySelector('.quiz-answer');
+
+        quizOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // 移除所有选项的状态
+                quizOptions.forEach(opt => {
+                    opt.classList.remove('correct', 'incorrect');
+                });
+                // 添加当前选项的状态
+                if (option.dataset.correct === 'true') {
+                    option.classList.add('correct');
+                } else {
+                    option.classList.add('incorrect');
+                }
+                // 显示答案解析
+                quizAnswer.classList.add('show');
+            });
+        });
+    </script>
+</body>
+</html>
